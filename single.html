@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Gravi‑Merge 2048 — Labyrinth Codex</title>
+
+  <!-- Mythic serif font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Spectral:wght@400;500&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="page-shell">
+    <header class="top-bar">
+      <div class="title-block">
+        <h1>Gravi‑Merge 2048</h1>
+        <p class="subtitle">Trial of Numbered Stones — The Labyrinth Codex</p>
+      </div>
+      <div class="top-actions">
+        <button class="pill-btn ghost">Help / Codex</button>
+        <button class="pill-btn" id="restart-header">Restart Trial</button>
+      </div>
+    </header>
+
+    <main class="main-layout">
+      <!-- I. The Floor -->
+      <section class="floor-panel" aria-label="Labyrinth Floor">
+        <div id="grid" class="grid"></div>
+      </section>
+
+      <!-- Right HUD: Side Stat Boxes & Reserve -->
+      <aside class="side-stats">
+        
+        <div class="stat-boxes-container">
+          <div class="stat-box">
+            <div class="stat-label">NEXT STONE</div>
+            <div class="stat-value" id="preview-value">2</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">TREASURY</div>
+            <div class="stat-value" id="treasury">0</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">BURDEN</div>
+            <div class="stat-value" id="living-tally">0</div>
+          </div>
+        </div>
+
+        <!-- Reserve Indicator & Controls -->
+        <div class="hud-card">
+          <h2>Reserve Indicator</h2>
+          <div class="reserve-box" id="reserve-box">
+            <div class="stone reserve" id="reserve-stone">
+              <span id="reserve-value">⨉</span>
+            </div>
+            <div>
+              <p id="reserve-label" class="reserve-label">No Emissary Held</p>
+              <p class="hint">Press <strong>Enter</strong> to Invoke.</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="hud-card small">
+          <h2>Controls</h2>
+          <p class="hint">
+            ← / → : move · ↓ : soft drop · ↑ / Space : hard drop
+          </p>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <!-- VI. Final Screen -->
+  <div id="final-screen" class="overlay hidden" role="dialog" aria-modal="true">
+    <div class="overlay-inner">
+      <h2>Trial Concluded</h2>
+      <p class="overlay-sub">Judgment is rendered upon the architect’s work.</p>
+
+      <div class="final-stats">
+        <div class="final-card">
+          <h3>Treasury of Delphi</h3>
+          <div class="hud-value" id="final-treasury">0</div>
+        </div>
+        <div class="final-card">
+          <h3>Living Tally (Burden)</h3>
+          <div class="hud-value" id="final-living">0</div>
+        </div>
+      </div>
+
+      <button class="pill-btn large" id="restart-final">Begin a New Trial</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
