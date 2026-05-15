@@ -10,7 +10,7 @@
   const livingEl = document.getElementById("living-tally");
   const treasuryEl = document.getElementById("treasury");
   const previewValueEl = document.getElementById("preview-value");
-  
+
   const reserveValueEl = document.getElementById("reserve-value");
   const reserveBoxEl = document.getElementById("reserve-box");
   const reserveLabelEl = document.getElementById("reserve-label");
@@ -21,6 +21,7 @@
 
   const restartHeaderBtn = document.getElementById("restart-header");
   const restartFinalBtn = document.getElementById("restart-final");
+  const pauseBtn = document.getElementById("pause-btn");
 
   // Grid state
   let grid = [];
@@ -28,7 +29,7 @@
   let treasury = 0;
 
   // Falling stone
-  let currentStone = null; 
+  let currentStone = null;
   let nextValue = null;
 
   // Reserve
@@ -37,6 +38,7 @@
 
   let tickId = null;
   let gameOver = false;
+  let paused = false;
 
   // --- Setup ---------------------------------------------------------------
 
@@ -59,7 +61,9 @@
   }
 
   function createEmptyGrid() {
-    grid = Array.from({ length: ROWS }, () => Array.from({ length: COLS }, () => 0));
+    grid = Array.from({ length: ROWS }, () =>
+      Array.from({ length: COLS }, () => 0),
+    );
   }
 
   function buildGridDOM() {
@@ -113,24 +117,32 @@
     render();
     updateHUD();
   }
-  
+
   function lockStone() {
     const { row, col, value } = currentStone;
-    
+
     // Emissary action: If it's the emissary "E", destroy surrounding 3x3
     if (value === "E") {
       let destroyedValue = 0;
-      for (let r = Math.max(0, row - 1); r <= Math.min(ROWS - 1, row + 1); r++) {
-        for (let c = Math.max(0, col - 1); c <= Math.min(COLS - 1, col + 1); c++) {
-           if (grid[r][c] !== 0 && grid[r][c] !== "E") {
-               destroyedValue += grid[r][c];
-               grid[r][c] = 0;
-           }
+      for (
+        let r = Math.max(0, row - 1);
+        r <= Math.min(ROWS - 1, row + 1);
+        r++
+      ) {
+        for (
+          let c = Math.max(0, col - 1);
+          c <= Math.min(COLS - 1, col + 1);
+          c++
+        ) {
+          if (grid[r][c] !== 0 && grid[r][c] !== "E") {
+            destroyedValue += grid[r][c];
+            grid[r][c] = 0;
+          }
         }
       }
       treasury += destroyedValue; // Optional: reward for destruction
       currentStone = null;
-      applyGravity(); 
+      applyGravity();
     } else {
       grid[row][col] = value;
       currentStone = null;
@@ -214,10 +226,11 @@
           const v = c < COLS ? grid[r][c] : null;
 
           if (v === runVal && v !== 0 && v !== "E") {
-            continue; 
+            continue;
           } else {
             const runEnd = c - 1;
-            const length = runVal === 0 || runVal === "E" ? 0 : runEnd - runStart + 1;
+            const length =
+              runVal === 0 || runVal === "E" ? 0 : runEnd - runStart + 1;
 
             if (length >= 3) {
               for (let k = runStart; k <= runEnd; k++) marked[r][k] = true;
@@ -265,7 +278,7 @@
       }
     } while (passChanged);
 
-    if(changedOverall) recomputeLivingTally();
+    if (changedOverall) recomputeLivingTally();
     return changedOverall;
   }
 
@@ -291,7 +304,7 @@
     for (let r = 0; r < ROWS; r++) {
       for (let c = 0; c < COLS; c++) {
         // Emissaries have no burden, don't count towards tally.
-        if(grid[r][c] !== "E" && grid[r][c] > 0) sum += grid[r][c];
+        if (grid[r][c] !== "E" && grid[r][c] > 0) sum += grid[r][c];
       }
     }
     livingTally = sum;
@@ -319,13 +332,13 @@
   function randomStoneValue() {
     // 1-in-20 chance for an Emissary
     if (Math.random() < 0.05) return "E";
-    
+
     // Otherwise, the 4 Gifts: 2, 4, 8, 16
     const roll = Math.random();
-    if (roll < 0.50) return 2;   // 50%
-    if (roll < 0.80) return 4;   // 30%
-    if (roll < 0.95) return 8;   // 15%
-    return 16;                   // 5%
+    if (roll < 0.5) return 2; // 50%
+    if (roll < 0.8) return 4; // 30%
+    if (roll < 0.95) return 8; // 15%
+    return 16; // 5%
   }
 
   // --- Rendering -----------------------------------------------------------
@@ -347,11 +360,15 @@
     if (currentStone) {
       let ghostRow = currentStone.row;
       while (canMoveTo(ghostRow + 1, currentStone.col)) ghostRow++;
-      
+
       if (ghostRow !== currentStone.row) {
-        getCell(ghostRow, currentStone.col).appendChild(createTile(currentStone.value, false, true));
+        getCell(ghostRow, currentStone.col).appendChild(
+          createTile(currentStone.value, false, true),
+        );
       }
-      getCell(currentStone.row, currentStone.col).appendChild(createTile(currentStone.value, true, false));
+      getCell(currentStone.row, currentStone.col).appendChild(
+        createTile(currentStone.value, true, false),
+      );
     }
   }
 
@@ -365,10 +382,10 @@
     if (active) div.classList.add("tile-active");
     if (ghost) div.classList.add("tile-ghost");
     if (value === "E") {
-       div.classList.add("tile-emissary");
-       div.innerHTML = "✧"; // Emissary symbol
+      div.classList.add("tile-emissary");
+      div.innerHTML = "✧"; // Emissary symbol
     } else {
-       div.textContent = value;
+      div.textContent = value;
     }
     return div;
   }
@@ -376,21 +393,22 @@
   function updateHUD() {
     livingEl.textContent = livingTally;
     treasuryEl.textContent = treasury;
-    
+
     previewValueEl.innerHTML = nextValue === "E" ? "✧" : nextValue;
-    if(nextValue === "E") {
-        previewValueEl.style.color = "#f3e1a3";
-        previewValueEl.parentElement.style.background = "linear-gradient(145deg, #463025, #1e120d)";
+    if (nextValue === "E") {
+      previewValueEl.style.color = "#f3e1a3";
+      previewValueEl.parentElement.style.background =
+        "linear-gradient(145deg, #463025, #1e120d)";
     } else {
-        previewValueEl.style.color = "#f9f0d2";
-        previewValueEl.parentElement.style.background = "#140d09";
+      previewValueEl.style.color = "#f9f0d2";
+      previewValueEl.parentElement.style.background = "#140d09";
     }
 
     if (reserveValue === null) {
       reserveValueEl.textContent = "⨉";
       reserveValueEl.style.color = "";
-      reserveBoxEl.style.opacity = "0.5";
-      reserveLabelEl.textContent = "No Emissary Held";
+      reserveBoxEl.style.opacity = "1";
+      reserveLabelEl.textContent = "Reserve Awaits";
     } else {
       reserveValueEl.innerHTML = reserveValue === "E" ? "✧" : reserveValue;
       reserveBoxEl.style.opacity = "1";
@@ -399,6 +417,19 @@
   }
 
   // --- End Game & Input ----------------------------------------------------
+  function togglePause() {
+    if (gameOver) return;
+
+    paused = !paused;
+
+    if (paused) {
+      clearInterval(tickId);
+      pauseBtn.textContent = "Resume Trial";
+    } else {
+      tickId = setInterval(gameTick, TICK_MS);
+      pauseBtn.textContent = "Pause Trial";
+    }
+  }
 
   function endGame() {
     gameOver = true;
@@ -410,38 +441,66 @@
     finalScreenEl.classList.remove("hidden");
   }
 
-  function hideFinalScreen() { finalScreenEl.classList.add("hidden"); }
-  function restartGame() { init(); }
+  function hideFinalScreen() {
+    finalScreenEl.classList.add("hidden");
+  }
+  function restartGame() {
+  paused = false;
+  pauseBtn.textContent = "Pause Trial";
+  init();
+}
 
   function handleKeydown(e) {
     if (e.repeat || gameOver) return;
 
-    if (e.key.toLowerCase() === "r") { restartGame(); return; }
+    if (paused && e.key.toLowerCase() !== "p") return;
 
+    if (e.key.toLowerCase() === "r") {
+      restartGame();
+      return;
+    }
+    if (e.key.toLowerCase() === "p") {
+      togglePause();
+      return;
+    }
     switch (e.key) {
-      case "ArrowLeft": case "a":
+      case "ArrowLeft":
+      case "a":
         if (currentStone && canMoveTo(currentStone.row, currentStone.col - 1)) {
-          currentStone.col--; render();
-        } break;
-      case "ArrowRight": case "d":
-        if (currentStone && canMoveTo(currentStone.row, currentStone.col + 1)) {
-          currentStone.col++; render();
-        } break;
-      case "ArrowDown": case "s":
-        if (currentStone && canMoveTo(currentStone.row + 1, currentStone.col)) {
-          currentStone.row++; render();
-        } else if (currentStone) lockStone(); 
+          currentStone.col--;
+          render();
+        }
         break;
-      case "ArrowUp": case " ":
-        hardDrop(); break;
+      case "ArrowRight":
+      case "d":
+        if (currentStone && canMoveTo(currentStone.row, currentStone.col + 1)) {
+          currentStone.col++;
+          render();
+        }
+        break;
+      case "ArrowDown":
+      case "s":
+        if (currentStone && canMoveTo(currentStone.row + 1, currentStone.col)) {
+          currentStone.row++;
+          render();
+        } else if (currentStone) lockStone();
+        break;
+      case "ArrowUp":
+      case " ":
+        hardDrop();
+        break;
       case "Enter":
-        handleReserveInvocation(); break;
+        handleReserveInvocation();
+        break;
     }
   }
 
-  window.addEventListener("keydown", handleKeydown);
-  restartHeaderBtn.addEventListener("click", restartGame);
-  restartFinalBtn.addEventListener("click", restartGame);
+window.addEventListener("keydown", handleKeydown);
+
+pauseBtn.addEventListener("click", togglePause);
+
+restartHeaderBtn.addEventListener("click", restartGame);
+restartFinalBtn.addEventListener("click", restartGame);
 
   init();
 })();

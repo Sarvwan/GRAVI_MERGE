@@ -16,12 +16,19 @@
     <header class="top-bar">
       <div class="title-block">
         <h1>Gravi‑Merge 2048</h1>
-        <p class="subtitle">Trial of Numbered Stones — The Labyrinth Codex</p>
+        <p class="subtitle">The Gravity Trials — The Labyrinth Codex</p>
       </div>
       <div class="top-actions">
-        <button class="pill-btn ghost">Help / Codex</button>
-        <button class="pill-btn" id="restart-header">Restart Trial</button>
-      </div>
+  <button class="pill-btn ghost">Help</button>
+
+  <button class="pill-btn ghost" id="pause-btn">
+    Pause Trial
+  </button>
+
+  <button class="pill-btn" id="restart-header">
+    Restart Trial
+  </button>
+</div>
     </header>
 
     <main class="main-layout">
@@ -35,28 +42,28 @@
         
         <div class="stat-boxes-container">
           <div class="stat-box">
-            <div class="stat-label">NEXT STONE</div>
+            <div class="stat-label">NEXT RELIC</div>
             <div class="stat-value" id="preview-value">2</div>
           </div>
           <div class="stat-box">
-            <div class="stat-label">TREASURY</div>
+            <div class="stat-label">RELIC WEALTH </div>
             <div class="stat-value" id="treasury">0</div>
           </div>
           <div class="stat-box">
-            <div class="stat-label">BURDEN</div>
+            <div class="stat-label"> BURDEN</div>
             <div class="stat-value" id="living-tally">0</div>
           </div>
         </div>
 
         <!-- Reserve Indicator & Controls -->
         <div class="hud-card">
-          <h2>Reserve Indicator</h2>
+          <h2>Reserved RELIC</h2>
           <div class="reserve-box" id="reserve-box">
             <div class="stone reserve" id="reserve-stone">
               <span id="reserve-value">⨉</span>
             </div>
             <div>
-              <p id="reserve-label" class="reserve-label">No Emissary Held</p>
+              <p id="reserve-label" class="reserve-label">Reserve Awaits</p>
               <p class="hint">Press <strong>Enter</strong> to Invoke.</p>
             </div>
           </div>
@@ -76,7 +83,7 @@
   <div id="final-screen" class="overlay hidden" role="dialog" aria-modal="true">
     <div class="overlay-inner">
       <h2>Trial Concluded</h2>
-      <p class="overlay-sub">Judgment is rendered upon the architect’s work.</p>
+      <p class="overlay-sub">Judgment is Rendered upon the architect’s work.</p>
 
       <div class="final-stats">
         <div class="final-card">
