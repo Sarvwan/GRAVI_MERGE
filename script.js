@@ -379,9 +379,10 @@
   function createTile(value, active = false, ghost = false) {
     const div = document.createElement("div");
     div.className = "tile";
+
     if (typeof value === "number") {
-  div.classList.add(`tile-${value}`);
-}
+      div.classList.add(`tile-${value}`);
+    }
     if (active) div.classList.add("tile-active");
     if (ghost) div.classList.add("tile-ghost");
     if (value === "E") {
@@ -448,10 +449,10 @@
     finalScreenEl.classList.add("hidden");
   }
   function restartGame() {
-  paused = false;
-  pauseBtn.textContent = "Pause Trial";
-  init();
-}
+    paused = false;
+    pauseBtn.textContent = "Pause Trial";
+    init();
+  }
 
   function handleKeydown(e) {
     if (e.repeat || gameOver) return;
@@ -498,12 +499,12 @@
     }
   }
 
-window.addEventListener("keydown", handleKeydown);
+  window.addEventListener("keydown", handleKeydown);
 
-pauseBtn.addEventListener("click", togglePause);
+  pauseBtn.addEventListener("click", togglePause);
 
-restartHeaderBtn.addEventListener("click", restartGame);
-restartFinalBtn.addEventListener("click", restartGame);
+  restartHeaderBtn.addEventListener("click", restartGame);
+  restartFinalBtn.addEventListener("click", restartGame);
 
   init();
 })();
