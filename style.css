@@ -33,14 +33,14 @@ body {
 }
 
 body {
-  display: flex;
-  justify-content: center;
-  align-items: stretch;
+  display: block;
+ 
 }
 .page-shell {
   width: 100%;
   max-width: 1200px;
   padding: 24px 32px 32px;
+  margin: 0 auto;
 }
 
 /* Top bar */
@@ -364,6 +364,63 @@ body {
   font-family: "Cinzel", serif;
   color: #fff;
 }
+
+/* ========================Labyrinth Footer======================== */
+
+.labyrinth-footer {
+  margin-top: 48px;
+  padding: 32px 20px;
+  border-top: 1px solid var(--border-soft);
+  background: rgba(10, 6, 4, 0.45);
+}
+
+.footer-inner {
+  max-width: 900px;
+  margin: auto;
+  text-align: center;
+}
+
+.labyrinth-footer h3 {
+  font-family: "Cinzel", serif;
+  color: var(--gold-bright);
+  letter-spacing: 0.08em;
+  font-size: 20px;
+  margin-bottom: 16px;
+}
+
+.footer-text {
+  color: var(--text-muted);
+  line-height: 1.7;
+  font-size: 14px;
+  max-width: 700px;
+  margin: auto;
+}
+
+.footer-icons {
+  margin-top: 22px;
+  display: flex;
+  justify-content: center;
+  gap: 22px;
+}
+
+.footer-icons a {
+  color: var(--gold-soft);
+  font-size: 20px;
+  transition: 0.25s ease;
+}
+
+.footer-icons a:hover {
+  color: var(--gold-bright);
+  transform: translateY(-2px);
+}
+
+.footer-credit {
+  margin-top: 22px;
+  font-size: 13px;
+  color: #9f8254;
+  letter-spacing: 0.04em;
+}
+
 
 /*  Mobile Responsive Layout */
 
