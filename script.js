@@ -379,6 +379,9 @@
   function createTile(value, active = false, ghost = false) {
     const div = document.createElement("div");
     div.className = "tile";
+    if (typeof value === "number") {
+  div.classList.add(`tile-${value}`);
+}
     if (active) div.classList.add("tile-active");
     if (ghost) div.classList.add("tile-ghost");
     if (value === "E") {
